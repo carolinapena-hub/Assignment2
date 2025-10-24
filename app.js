@@ -4,6 +4,64 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
     .then(data => {
         const meals = data.meals;
 
+// Funktion 1: Grupperar måltider efter en nyckel
+        function groupBy(items, key) {
+            return items.reduce((acc, item) => {
+                const groupKey = item[key];
+                if (!acc[groupKey]) {
+                    acc[groupKey] = [];
+                }
+                acc[groupKey].push(item);
+                return acc;
+            }, {});
+        }
+        const groupedByCategory = groupBy(meals, "strCategory");
+        console.log("\n Måltider grupperade efter kategori:");
+        console.log(groupedByCategory);
+
+// Funktion 2: kompakta sammanfattningar
+        function mapToSummary(meals) {
+            return meals.map(meal => {
+                const ingredients = [];
+                for (let i = 1; i <= 20; i++) {
+                    const ingredient = meal[`strIngredient${i}`];
+                    if (ingredient && ingredient.trim() !== "") {
+                        ingredients.push(ingredient.trim());
+                    }
+                }
+                return {
+                    id: meal.idMeal,
+                    name: meal.strMeal,
+                    category: meal.strCategory,
+                    ingredients: ingredients
+                };
+            });
+        }
+        const summaries = mapToSummary(meals);
+        console.log("\n Kompakta sammanfattningar av måltider:");
+        console.log(summaries);
+
+// Funktion 3: Skapa frekvenskarta över ingredienser
+        function buildIngredientFrequency(meals) {
+            return meals.reduce((acc, meal) => {
+                for (let i = 1; i <= 20; i++) {
+                    const ingredient = meal[`strIngredient${i}`];
+                    if (ingredient && ingredient.trim() !== "") {
+                        const key = ingredient.trim();
+                        acc[key] = (acc[key] || 0) + 1;
+                    }
+                }
+                return acc;
+            }, {});
+        }
+        const ingredientFrequency = buildIngredientFrequency(meals);
+        console.log("\n Frekvenskarta över ingredienser:");
+        console.log(ingredientFrequency);
+
+
+
+
+
         // 1. Skriver ut de första 5 måltidsnamnen i alfabetisk ordning
         const sortedMeals = meals
             .sort((a, b) => a.strMeal.localeCompare(b.strMeal))
@@ -35,3 +93,4 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log(categoryCount);
     })
     .catch(error => console.error("Något gick fel vid hämtning av data:", error));
+
