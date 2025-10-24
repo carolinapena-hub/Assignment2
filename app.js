@@ -1,10 +1,11 @@
-// Hämtar data från TheMealDB API
+//1. Hämtar data från TheMealDB API
 fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
     .then(response => response.json())
     .then(data => {
         const meals = data.meals;
 
-// Funktion 1: Grupperar måltider efter en nyckel
+
+// 2.Funktion : Grupperar måltider efter en nyckel
         function groupBy(items, key) {
             return items.reduce((acc, item) => {
                 const groupKey = item[key];
@@ -19,7 +20,7 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log("\n Måltider grupperade efter kategori:");
         console.log(groupedByCategory);
 
-// Funktion 2: kompakta sammanfattningar
+// 3.Funktion : kompakta sammanfattningar
         function mapToSummary(meals) {
             return meals.map(meal => {
                 const ingredients = [];
@@ -41,7 +42,7 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log("\n Kompakta sammanfattningar av måltider:");
         console.log(summaries);
 
-// Funktion 3: Skapa frekvenskarta över ingredienser
+// 4.Funktion: Skapa frekvenskarta över ingredienser
         function buildIngredientFrequency(meals) {
             return meals.reduce((acc, meal) => {
                 for (let i = 1; i <= 20; i++) {
@@ -58,11 +59,7 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log("\n Frekvenskarta över ingredienser:");
         console.log(ingredientFrequency);
 
-
-
-
-
-        // 1. Skriver ut de första 5 måltidsnamnen i alfabetisk ordning
+        // 5. Skriver ut de första 5 måltidsnamnen i alfabetisk ordning
         const sortedMeals = meals
             .sort((a, b) => a.strMeal.localeCompare(b.strMeal))
             .slice(0, 5)
@@ -71,7 +68,7 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log(" Första 5 måltider i alfabetisk ordning:");
         console.log(sortedMeals);
 
-        // 2. Filtrerar måltider som tillhör kategorin ("Seafood")
+        // 6. Filtrerar måltider som tillhör kategorin ("Seafood")
         const givenCategory = "Seafood";
         const filteredMeals = meals.filter(meal =>
             meal.strCategory.toLowerCase() === givenCategory.toLowerCase()
@@ -82,7 +79,7 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
             console.log(`- ${meal.strMeal} (${meal.strCategory})`)
         );
 
-        // 3. Visar hur många gånger varje kategori förekommer
+        // 7. Visar hur många gånger varje kategori förekommer
         const categoryCount = meals.reduce((acc, meal) => {
             const category = meal.strCategory;
             acc[category] = (acc[category] || 0) + 1;
@@ -93,4 +90,8 @@ fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         console.log(categoryCount);
     })
     .catch(error => console.error("Något gick fel vid hämtning av data:", error));
+
+
+
+
 
